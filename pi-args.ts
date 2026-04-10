@@ -51,10 +51,11 @@ export function buildPiArgs(input: BuildPiArgsInput): BuildPiArgsResult {
 
 	const modelArg = applyThinkingSuffix(input.model, input.thinking);
 	if (modelArg) {
-		// Use --models (not --model) because pi CLI silently ignores --model
-		// without a companion --provider flag. --models resolves the provider
-		// automatically via resolveModelScope. See: #8
-		args.push("--models", modelArg);
+		// Use --model to select the active child model.
+		// The pattern can include a provider prefix (e.g. "kilo/openai/gpt-5.4-mini")
+		// and optional thinking suffix, which pi resolves correctly.
+		// --models only scopes Ctrl+P cycling and does not force the active model.
+		args.push("--model", modelArg);
 	}
 
 	const toolExtensionPaths: string[] = [];

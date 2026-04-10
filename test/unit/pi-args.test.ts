@@ -3,6 +3,20 @@ import { describe, it } from "node:test";
 import { buildPiArgs } from "../../pi-args.ts";
 
 describe("buildPiArgs session wiring", () => {
+	it("uses --model for active child model selection", () => {
+		const { args } = buildPiArgs({
+			baseArgs: ["-p"],
+			task: "hello",
+			sessionEnabled: false,
+			model: "kilo/openai/gpt-5.4-mini",
+			thinking: "low",
+		});
+
+		assert.ok(args.includes("--model"));
+		assert.ok(args.includes("kilo/openai/gpt-5.4-mini:low"));
+		assert.ok(!args.includes("--models"), "--models should not be used for active model selection");
+	});
+
 	it("uses --session when sessionFile is provided", () => {
 		const { args } = buildPiArgs({
 			baseArgs: ["-p"],
